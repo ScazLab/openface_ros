@@ -29,10 +29,7 @@ OpenFaceRos::OpenFaceRos(string name, double _fx, double _fy, double _cx, double
     detection_success = false;
     distance_head = -1;
     distance_gripper = -1;
-
-    //TODO: Delete this
-   // boost::circular_buffer<float> buffer(150);
-    test = n.advertise<openface_ros::face_info>("/" + name + "/face_info", 10);
+    face_information = n.advertise<openface_ros::face_info>("/" + name + "/face_info", 10);
 }
 
 OpenFaceRos::~OpenFaceRos()
@@ -266,41 +263,11 @@ void OpenFaceRos::faceDetection(cv_bridge::CvImagePtr cv_color_ptr)
 
     }
 
-    // if (detection_success) {
-    //     vector<Point> nose = getNose()
-    //     buffer.push_back(nose.y);
-
-    //     if (buffer.full()) {
-    //         if (checkHeadNod() == 1) {
-    //             std::cout << "Head Nod" << std::endl;
-    //         }
-    //     }
-    // }
-
     recordFaceInfo();
     
     checkGaze();
 }
 
-// int OpenFaceRos::checkHeadNod() 
-// {
-//     float mean = (std::accumulate(buffer.begin(), buffer.end(), 0)) / buffer.size();
-
-//     float dev_sum = 0.0;
-//     float max = -1000.0;
-//     float min = 1000.0;
-
-//     for (boost::circular_buffer<float>::iterator it = buffer.begin(); it != buffer.end(); it++) {
-//         dev_sum = dev_sum + pow((*it - mean), 2.0);
-//         if (it < min)
-//             min = it;
-//         if (it > max)
-//             max = it;
-//     }
-
-//     float sd = sqrt(dev_sum / buffer.size(), 2.0);
-
-// } 
 
 void OpenFaceRos::recordFaceInfo() 
 {
@@ -342,7 +309,7 @@ void OpenFaceRos::recordFaceInfo()
         face_info_msg.gazeAngle.z = 0;
     }
 
-    test.publish(face_info_msg);
+    face_information.publish(face_info_msg);
 }
 
 vector<Point> OpenFaceRos::getNose()

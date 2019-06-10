@@ -37,7 +37,7 @@ private:
 
     ros::Publisher head_status_pub;
     ros::Publisher gripper_status_pub;
-    ros::Publisher test;
+    ros::Publisher face_information;
     tf::TransformListener listener;
     tf::TransformBroadcaster broadcaster;
     image_transport::Subscriber color_image_sub;
