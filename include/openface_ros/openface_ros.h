@@ -30,12 +30,14 @@ private:
     Utilities::Visualizer visualizer;
     cv::Point3f gazeDirection0;
     cv::Point3f gazeDirection1;
+    cv::Vec2d gazeAngle;        // NEW
     cv::Point3f pupil_left;
     cv::Point3f pupil_right;
     cv::Vec6f pose_estimate;
 
     ros::Publisher head_status_pub;
     ros::Publisher gripper_status_pub;
+    ros::Publisher test;
     tf::TransformListener listener;
     tf::TransformBroadcaster broadcaster;
     image_transport::Subscriber color_image_sub;
@@ -59,6 +61,7 @@ private:
     void depthCb(const sensor_msgs::ImageConstPtr& msg);
 
     void checkGaze();
+    void recordFaceInfo();
     void checkAU(std::vector<std::pair<std::string, double>> face_actions_class);
     void faceDetection(cv_bridge::CvImagePtr cv_color_ptr);
     void calculatePupil(cv::Point3f& pupil_left, cv::Point3f& pupil_right, const std::vector<cv::Point3f>& eye_landmarks3d);

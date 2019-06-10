@@ -1,0 +1,36 @@
+<launch>
+
+    <!-- starts node for asynchronous openface_ros /-->
+    <node pkg="openface_ros" name="openface_ros1" type="openface_realsense" output="screen">
+
+        <!-- participant ID /-->
+        <param    name ="pid" type="int" value="1" />
+
+        <!-- device name of video source. /-->
+        <param    name ="camera_device_name" type="str" value="camera1" /> 
+
+    </node>
+
+    <!-- starts node for asynchronous openface_ros /-->
+    <node pkg="openface_ros" name="openface_ros2" type="openface_realsense" output="screen">
+
+        <!-- participant ID /-->
+        <param    name ="pid" type="int" value="2" />
+
+        <!-- device name of video source. /-->
+        <param    name ="camera_device_name" type="str" value="camera2" /> 
+
+    </node>    
+
+    <!-- starts node for asynchronous openface_ros /-->
+    <node pkg="openface_ros" name="openface_ros3" type="openface_realsense" output="screen">
+
+        <!-- participant ID /-->
+        <param    name ="pid" type="int" value="3" />
+
+        <!-- device name of video source. /-->
+        <param    name ="camera_device_name" type="str" value="camera3" /> 
+
+    </node>
+    
+</launch>
