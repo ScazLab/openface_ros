@@ -61,9 +61,9 @@ private:
     void depthCb(const sensor_msgs::ImageConstPtr& msg);
 
     void checkGaze();
-    void recordFaceInfo();
+    void recordFaceInfo(std_msgs::Header);
     void checkAU(std::vector<std::pair<std::string, double>> face_actions_class);
-    void faceDetection(cv_bridge::CvImagePtr cv_color_ptr);
+    void faceDetection(cv_bridge::CvImagePtr cv_color_ptr, std_msgs::Header);
     void calculatePupil(cv::Point3f& pupil_left, cv::Point3f& pupil_right, const std::vector<cv::Point3f>& eye_landmarks3d);
     void Project(cv::Mat_<float>& dest, const cv::Mat_<float>& mesh, float _fx, float _fy, float _cx, float _cy);
     

@@ -16,6 +16,7 @@ find_package(catkin REQUIRED COMPONENTS
   tf
   cv_bridge
   image_transport
+  message_generation
 )
 
 find_package(OpenCV REQUIRED)
@@ -26,6 +27,21 @@ find_package(Boost REQUIRED COMPONENTS filesystem system)
 ## See http://ros.org/doc/api/catkin/html/user_guide/setup_dot_py.html
 # catkin_python_setup()
 
+# Declare the message files to built
+add_message_files(
+FILES
+landmark.msg
+face_info.msg
+pose.msg
+)
+
+# Generate language-specific message
+generate_messages(
+DEPENDENCIES
+std_msgs
+geometry_msgs
+)
+
 ###################################
 ## catkin specific configuration ##
 ###################################
@@ -33,7 +49,7 @@ find_package(Boost REQUIRED COMPONENTS filesystem system)
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES openface_ros
-#  CATKIN_DEPENDS roscpp rospy sensor_msgs std_msgs tf
+#  CATKIN_DEPENDS roscpp rospy sensor_msgs std_msgs tf message_runtime
 #  DEPENDS system_lib
 )
 
@@ -77,3 +93,4 @@ target_link_libraries(openface_realsense LandmarkDetector boost_filesystem boost
 target_link_libraries(openface_realsense FaceAnalyser)
 target_link_libraries(openface_realsense GazeAnalyser)
 target_link_libraries(openface_realsense Utilities)
+

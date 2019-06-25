@@ -153,6 +153,7 @@ unsigned short OpenFaceRos::getMedianDepth(int row, int col)
 void OpenFaceRos::colorCb(const sensor_msgs::ImageConstPtr& msg)
 {
     cv_bridge::CvImagePtr cv_color_ptr;
+    std_msgs::Header header = msg->header;
     try
     {
         cv_color_ptr = cv_bridge::toCvCopy(msg, sensor_msgs::image_encodings::BGR8);
@@ -163,10 +164,10 @@ void OpenFaceRos::colorCb(const sensor_msgs::ImageConstPtr& msg)
         return;
     }
 
-    faceDetection(cv_color_ptr);
+    faceDetection(cv_color_ptr, header);
 }
 
-void OpenFaceRos::faceDetection(cv_bridge::CvImagePtr cv_color_ptr)
+void OpenFaceRos::faceDetection(cv_bridge::CvImagePtr cv_color_ptr, std_msgs::Header header)
 {
     Mat grayscale_image;
     Mat rgb_image = cv_color_ptr->image;
@@ -182,9 +183,6 @@ void OpenFaceRos::faceDetection(cv_bridge::CvImagePtr cv_color_ptr)
         gazeAngle = GazeAnalysis::GetGazeAngle(gazeDirection0, gazeDirection1);
         calculatePupil(pupil_left, pupil_right, LandmarkDetector::Calculate3DEyeLandmarks(face_model, fx, fy, cx, cy));
     }
-
-    //cv::Vec2d gazeAngle(0, 0);
-    // gazeAngle = GazeAnalysis::GetGazeAngle(gazeDirection0, gazeDirection1);
 
     // Work out the pose of the head from the tracked model
     pose_estimate = LandmarkDetector::GetPose(face_model, fx, fy, cx, cy);
@@ -263,19 +261,22 @@ void OpenFaceRos::faceDetection(cv_bridge::CvImagePtr cv_color_ptr)
 
     }
 
-    recordFaceInfo();
+    recordFaceInfo(header);
     
     checkGaze();
 }
 
 
-void OpenFaceRos::recordFaceInfo() 
+void OpenFaceRos::recordFaceInfo(std_msgs::Header header) 
 {
     openface_ros::face_info face_info_msg;
-    face_info_msg.header.stamp = ros::Time::now();
+    face_info_msg.header.seq = header.seq;
+    face_info_msg.header.stamp = header.stamp;
+    face_info_msg.header.frame_id = header.frame_id;
     face_info_msg.num = 0;
 
     if(detection_success) {
+
         face_info_msg.num = 1;
 
         face_info_msg.landmarks.clear();
