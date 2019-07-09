@@ -273,13 +273,13 @@ void OpenFaceRos::recordFaceInfo(std_msgs::Header header)
     face_info_msg.header.seq = header.seq;
     face_info_msg.header.stamp = header.stamp;
     face_info_msg.header.frame_id = header.frame_id;
-    face_info_msg.num = 0;
+    face_info_msg.detected = 0;
 
     if(detection_success) {
 
-        face_info_msg.num = 1;
+        face_info_msg.detected = 1;
 
-        face_info_msg.landmarks.clear();
+        face_info_msg.landmarks3D.clear();
 
         for (int i = 0; i < face_model.GetShape(fx, fy, cx, cy).cols; i++) {
             openface_ros::landmark landmark_point;
@@ -287,7 +287,7 @@ void OpenFaceRos::recordFaceInfo(std_msgs::Header header)
             landmark_point.x = face_model.GetShape(fx, fy, cx, cy).at<float>(i, 0);
             landmark_point.y = face_model.GetShape(fx, fy, cx, cy).at<float>(i, 1);
             landmark_point.z = face_model.GetShape(fx, fy, cx, cy).at<float>(i, 2);
-            face_info_msg.landmarks.push_back(landmark_point);
+            face_info_msg.landmarks3D.push_back(landmark_point);
         }
 
         face_info_msg.head_pose.x = pose_estimate[0];
@@ -308,6 +308,18 @@ void OpenFaceRos::recordFaceInfo(std_msgs::Header header)
         face_info_msg.gazeAngle.x = (float) gazeAngle[0];
         face_info_msg.gazeAngle.y = (float) gazeAngle[1];
         face_info_msg.gazeAngle.z = 0;
+
+        face_info_msg.landmarks2D.clear();
+
+        int nLandmarks = face_model.detected_landmarks.rows / 2;
+        for (int i = 0; i < nLandmarks; i++) {
+        	openface_ros::landmark landmark;
+        	landmark.ID = i;
+        	landmark.x = face_model.detected_landmarks.at<float>(0, i);
+        	landmark.y = face_model.detected_landmarks.at<float>(0, i + nLandmarks);
+        	landmark.z = 0.0;
+        	face_info_msg.landmarks2D.push_back(landmark);
+        }
     }
 
     face_information.publish(face_info_msg);
